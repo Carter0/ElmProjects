@@ -6,32 +6,28 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
 
 
-
-
 main =
     Browser.sandbox { init = init, update = update, view = view }
 
 
-
-type alias Model = 
-      Bool
-
+type alias Model =
+    Bool
 
 
-type Msg = 
-    Input String
+type Msg
+    = Input String
 
 
-init : Model 
-init = 
+init : Model
+init =
     True
 
-update : Msg -> Model -> Model 
+
+update : Msg -> Model -> Model
 update msg model =
-    case msg of 
+    case msg of
         Input input ->
             isPaired input
-
 
 
 isPaired : String -> Bool
@@ -43,9 +39,11 @@ isPaired input =
         Ok value ->
             List.isEmpty value
 
-stackFunctionality : Char -> Result String (List Char) -> Result String (List Char) 
+
+stackFunctionality : Char -> Result String (List Char) -> Result String (List Char)
 stackFunctionality bracket bracketStack =
     Result.andThen (updateStack bracket) bracketStack
+
 
 updateStack : Char -> List Char -> Result String (List Char)
 updateStack bracket bracketStack =
@@ -94,26 +92,29 @@ bracketToLookFor char =
         ']'
 
 
-
 view : Model -> Html Msg
 view model =
-    div [] [
-        bracketDescription
-        , text <| case model of
-           True -> "They Match!"
-           False -> "They do not match."
-        , div [] [
-            input [placeholder "Enter brackets", onInput Input] []
+    div []
+        [ bracketDescription
+        , text <|
+            case model of
+                True ->
+                    "They Match!"
+
+                False ->
+                    "They do not match."
+        , div []
+            [ input [ placeholder "Enter brackets", onInput Input ] []
+            ]
         ]
-    ]
 
 
-bracketDescription : Html Msg  
+bracketDescription : Html Msg
 bracketDescription =
-    div [] [
-        text "Given a string containing brackets [], braces {}, parentheses (), or any combination thereof,"
+    div []
+        [ text "Given a string containing brackets [], braces {}, parentheses (), or any combination thereof,"
         , br [] []
         , text "verify that any and all pairs are matched and nested correctly."
         , br [] []
         , br [] []
-    ]
+        ]
