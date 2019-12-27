@@ -1,8 +1,8 @@
 module Main exposing (isPaired)
 
 import Browser
-import Html exposing (Html, br, div, input, text)
-import Html.Attributes exposing (..)
+import Html exposing (Html, br, div, input, text, h2)
+import Html.Attributes exposing (class, placeholder)
 import Html.Events exposing (onInput)
 
 
@@ -33,7 +33,7 @@ update msg model =
 isPaired : String -> Bool
 isPaired input =
     case String.foldl stackFunctionality (Result.Ok []) input of
-        Err error ->
+        Err _ ->
             False
 
         Ok value ->
@@ -94,27 +94,31 @@ bracketToLookFor char =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ bracketDescription
-        , text <|
-            case model of
-                True ->
-                    "They Match!"
-
-                False ->
-                    "They do not match."
+    div [ class "topLevel" ]
+        [ h2 [] [text "Matching Brackets"]
+        , bracketDescription
         , div []
             [ input [ placeholder "Enter brackets", onInput Input ] []
+            , text <|
+                if model then
+                    "They Match!"
+
+                else
+                    "They do not match."
             ]
         ]
 
 
 bracketDescription : Html Msg
 bracketDescription =
-    div []
+    div [ class "description" ]
         [ text "Given a string containing brackets [], braces {}, parentheses (), or any combination thereof,"
         , br [] []
         , text "verify that any and all pairs are matched and nested correctly."
+        , br [] []
+        , br [] []
+        , text "Input either [], {}, or () and this program will tell you whether or not they match, " 
+        , text "e.g., [{}] matches but (){] does not."
         , br [] []
         , br [] []
         ]
