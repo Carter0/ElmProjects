@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Browser
-import Html exposing (Html, br, button, div, h3, input, p, text)
+import Html exposing (Html, br, button, div, h3, input, p, text, span)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 
@@ -89,10 +89,10 @@ rebase inBase digits outBase =
 badConditions : Int -> List Int -> Int -> Bool
 badConditions inBase digits outBase =
     List.isEmpty (List.filter (\x -> x /= 0) digits)
-        || inBase
-        <= 1
-        || outBase
-        <= 1
+        || inBase <= 1 
+        || inBase > 10
+        || outBase <= 1
+        || outBase > 10
         || List.any (\x -> x < 0) digits
         || List.any (\x -> x >= inBase) digits
 
@@ -122,7 +122,7 @@ outBaseConversion outBase acc number =
 
 view : Model -> Html Msg
 view model =
-    div []
+    div [class "all"]
         [ description
         , inputs model
         ]
@@ -130,12 +130,14 @@ view model =
 
 inputs : Model -> Html Msg
 inputs model =
-    div []
+    div [class "inputs"]
         [ div []
-            [ input [ placeholder "Enter Number to Convert", onInput InNumber ] []
-            , div [] [ input [ placeholder "Enter InBase", onInput InBase ] [], input [ placeholder "Enter OutBase", onInput OutBase ] [] ]
-            , div [] [ button [ onClick Calculate ] [ text "calculate" ] ]
-            , text <| Maybe.withDefault "Invalid input" model.outNumber
+            [ 
+            div [] [input [ placeholder "Enter Number to Convert", onInput InNumber, class "numberInput"] []]
+            , div [class "baseInputs"] [ input [ placeholder "Enter InBase", onInput InBase, class "inBase" ] []
+                , input [ placeholder "Enter OutBase", onInput OutBase, class "outBase" ] []
+                , span [class "output"] [text <| Maybe.withDefault "Invalid input" model.outNumber] ]
+            , div [] [ button [ onClick Calculate, class "calculateButton" ] [ text "Calculate!" ] ]
             ]
         ]
 
@@ -143,11 +145,11 @@ inputs model =
 description : Html Msg
 description =
     div []
-        [ div [] [ h3 [] [ text "General Base Conversion" ] ]
-        , p []
+        [ div [] [ h3 [class "title"] [ text "General Base Conversion" ] ]
+        , p [class "description"]
             [ text "Convert a number, represented as a sequence of digits in one base, to any other base."
             , br [] []
-            , text "Will convert anything from base 2 to base 10."
+            , text "Will convert anything from base 2 to base 10 or vice versa."
             , br [] []
             , text "Input a number and its inbase and outbase."
             , br [] []
